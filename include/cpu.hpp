@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include <array>
+#include <string>
 
 class CPU {
 private:
@@ -53,6 +54,8 @@ public:
      * Execute a single CPU cycle.
      */
     void step();
+
+    void load_rom(const std::string& path);
 };
 
 #endif // CPU_HPP

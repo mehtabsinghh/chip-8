@@ -40,40 +40,51 @@ void Display::clear_screen() {
 }
 
 bool Display::draw_sprite(int x, int y, const std::uint8_t* sprite, int n) {
+    // Ensure x and y are within bounds
     int startX = x & (WIDTH - 1);
     int startY = y & (HEIGHT - 1);
 
+
     bool collision = false;
 
+    // Iterate over the sprite rows
     for (int row = 0; row < n; ++row) {
         auto dy = startY + row;
-        if (dy >= HEIGHT) break;
+        if (dy >= HEIGHT) break; // Prevent drawing outside the display height
 
         auto rowBits = sprite[row];
+
+        // Iterate over the bits in the row
         for (int bit = 0; bit < 8; ++bit) {
             auto dx = startX + bit;
-            if (dx >= WIDTH) break;
+            if (dx >= WIDTH) break; // Prevent drawing outside the display width
 
+            // Check if the pixel is off (0) or on (1)
             bool pixelOff = (rowBits & (0x80 >> bit)) == 0;
-            if (pixelOff) continue;
+            if (pixelOff) continue; // Skip if the pixel is off
 
+            // Calculate the index in the pixel array
             size_t idx = dy * WIDTH + dx;
             if (pixels[idx]) {
                 collision = true;
             }
+
+            // Toggle the pixel state
             pixels[idx] ^= 1;
         }
     }
-
-    render();
+    
+    render(); // Update the display after drawing the sprite 
     return collision;
 }
 
 void Display::render() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
-    SDL_RenderClear(renderer);
+    // Clear the renderer with black color
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer); 
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White background
+    // Draw the pixels using white color
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     for (int y = 0; y < HEIGHT; ++y) {
         for (int x = 0; x < WIDTH; ++x) {
             if (pixels[y * WIDTH + x]) {
@@ -83,5 +94,6 @@ void Display::render() {
         }
     }
 
+    // Present the renderer to the screen
     SDL_RenderPresent(renderer);
 }
