@@ -9,9 +9,8 @@ int main() {
     try {
         bool quit = false;
         SDL_Event e;
-        Display display(10);
-
-
+        CPU cpu;
+        cpu.load_rom("../tests/1-ibm-logo.ch8"); // Load your ROM file here
         while (!quit) {
             // Handle window events
             while (SDL_PollEvent(&e)) {
@@ -19,7 +18,7 @@ int main() {
                     quit = true;
                 }
             }
-            display.render();
+            cpu.step(); // Execute a single CPU cycle
             SDL_Delay(16); // ~60 FPS
         }
 
