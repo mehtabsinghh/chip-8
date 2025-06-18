@@ -34,6 +34,10 @@ public:
     Render the display to the screen.
     */
     void render();
+    
+    const std::array<uint8_t, WIDTH * HEIGHT>& get_pixels() const {
+        return pixels;
+    }
 
 };
 
