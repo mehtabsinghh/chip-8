@@ -15,7 +15,8 @@ std::uint16_t CPU::fetch() {
 }
 
 /*
-TODO:
+TODO: Implement the rest of the instruction set
+DONE:
 00E0 (clear screen)
 1NNN (jump)
 6XNN (set register VX)
