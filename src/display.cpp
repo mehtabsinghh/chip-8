@@ -39,6 +39,36 @@ void Display::clear_screen() {
     SDL_RenderPresent(renderer);
 }
 
+bool Display::draw_sprite(int x, int y, const std::uint8_t* sprite, int n) {
+    int startX = x & (WIDTH - 1);
+    int startY = y & (HEIGHT - 1);
+
+    bool collision = false;
+
+    for (int row = 0; row < n; ++row) {
+        auto dy = startY + row;
+        if (dy >= HEIGHT) break;
+
+        auto rowBits = sprite[row];
+        for (int bit = 0; bit < 8; ++bit) {
+            auto dx = startX + bit;
+            if (dx >= WIDTH) break;
+
+            bool pixelOff = (rowBits & (0x80 >> bit)) == 0;
+            if (pixelOff) continue;
+
+            size_t idx = dy * WIDTH + dx;
+            if (pixels[idx]) {
+                collision = true;
+            }
+            pixels[idx] ^= 1;
+        }
+    }
+
+    render();
+    return collision;
+}
+
 void Display::render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
     SDL_RenderClear(renderer);
